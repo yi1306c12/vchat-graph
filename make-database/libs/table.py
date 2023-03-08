@@ -18,8 +18,9 @@ TYPE_CONVERT_DICT = {
 def create_query(table_name: str, df: pandas.DataFrame, uniques: list[str] = [], foreign_tables: list[str] = []) -> str:
     table_keys = [
         "{0}No INTEGER PRIMARY KEY".format(table_name),
-        *[" ".join([name, TYPE_CONVERT_DICT[dtype.__class__]] + (["UNIQUE"] if name in uniques else [])) for name, dtype in df.dtypes.items()],
-        *["FOREIGN KEY ({0}No) REFERENCES {0} ({0}No)".format(name) for name in foreign_tables]
+        *[name + " " + TYPE_CONVERT_DICT[dtype.__class__] for name, dtype in df.dtypes.items()],
+        *["FOREIGN KEY ({0}No) REFERENCES {0} ({0}No)".format(name) for name in foreign_tables],
+        "UNIQUE ({})".format(', '.join(uniques))
     ]
     return "CREATE TABLE {0} (".format(table_name) + ", ".join(table_keys) + ");"
 

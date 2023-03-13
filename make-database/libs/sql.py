@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 TYPE_CONVERT_DICT = {
-        numpy.dtype(numpy.object_).__class__: 'TEXT',
-        numpy.dtype(numpy.int64).__class__: 'INTEGER',
+        numpy.dtype(numpy.object_): 'TEXT',
+        numpy.dtype(numpy.int64): 'INTEGER',
 }
 
 
@@ -18,7 +18,7 @@ TYPE_CONVERT_DICT = {
 def create(table_name: str, df: pandas.DataFrame, uniques: list[str] = [], foreign_tables: list[str] = []) -> str:
     table_keys = [
         "{0}No INTEGER PRIMARY KEY".format(table_name),
-        *[name + " " + TYPE_CONVERT_DICT[dtype.__class__] for name, dtype in df.dtypes.items()],
+        *[name + " " + TYPE_CONVERT_DICT[dtype] for name, dtype in df.dtypes.items()],
         *["FOREIGN KEY ({0}No) REFERENCES {0} ({0}No)".format(name) for name in foreign_tables],
         "UNIQUE ({})".format(', '.join(uniques))
     ]
